@@ -1,0 +1,36 @@
+body {
+  margin: 0;
+}
+
+.navbar {
+  height: 5em;
+  background-color: green;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 1em 0 1em 0;
+  background-image: linear-gradient(to right, #4682B4, #2E8B57);
+}
+
+.title {
+  color: white;
+  margin: 0;
+}
+
+.searchBar {
+  width: 80%;
+  padding: 1em;
+  margin-left: 2em;
+}
+
+.icon {
+  width: 3.5em;
+  margin-left: 2em;
+  position: absolute;
+  bottom: 0;
+  background-color: green;
+}
+
+.search-form {
+  position: relative;
+}

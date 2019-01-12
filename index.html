@@ -4,16 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
     <title>Waste Lookup</title>
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="wasteLookup.js"></script>
 
+    <link rel="stylesheet" type="text/css" href="style.css">
+
 </head>
 <body>
-  <form action="" class="search">
-    <input type="text">
-    <button>Search</button>
+  <div class="navbar">
+    <h1 class="title">
+      Toronto Waste Lookup
+    </h1>
+  </div>
+  <form action="" class="search-form">
+    <input type="text" class="searchBar">
+    <input type="image" name="submit" src="docs/iconfinder_Search.png" alt="Submit" class="icon"/>
   </form>
+
   <table id="tableResult">
 
   </table>
