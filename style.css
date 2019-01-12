@@ -34,3 +34,7 @@ body {
 .search-form {
   position: relative;
 }
+
+.clicked {
+  color: yellow;
+}

@@ -4,21 +4,35 @@ function decodeHtml(html) {
     return txt.value;
 }
 
-function findKeyWord(array, search){
-  console.log(search);
+function addId(resultArray) {
 
+}
+
+function findKeyWord(array, search){
   array.forEach(function(element){
     if(element.keywords.includes(search)){
       let description = decodeHtml(element.body)
+
       let result =
         `
-          <tr>
-            <th>${element.title}</th>
+          <tr id=${element.id}>
+            <th>
+              <span id="star${element.id}">
+                <i class="fas fa-star"></i>
+              </span>
+              ${element.title}
+
+            </th>
             <td>${description}</td>
           </tr>
         `
 
-      $('#tableResult').append(result);
+      $('#tableResult').append(result).data("favorite", false);
+      $(`#${element.id}`).click(function(){
+        // $(this).data("favorite", true)
+        $(`#star${element.id}`).toggleClass('clicked');;
+
+      })
     }
   })
 }
@@ -27,19 +41,30 @@ function loadData(){
   const Url = 'https://secure.toronto.ca/cc_sr_v1/data/swm_waste_wizard_APR?limit=1000';
   $('.search-form').on("submit", function(event){
     const search = $('.searchBar').val()
-    // event.preventDefault();
     $.ajax({
       url: Url,
       type: "Get",
       success: function(response){
-        findKeyWord(response, search);
+        const resultId = response.map((e, i) => {
+              return {
+                  ...e,
+                  id: i
+              }
+          });
+        console.log(resultId);
+        findKeyWord(resultId, search);
       },
       error: function(error){
         console.log(`Error ${error}`)
       }
     })
+
     return false;
   })
+}
+
+function addFavorites() {
+
 }
 
 $(document).ready(function(){
