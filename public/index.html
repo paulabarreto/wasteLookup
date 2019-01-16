@@ -8,10 +8,10 @@
     <title>Waste Lookup</title>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="wasteLookup.js"></script>
-    
+    <script src="./scripts/app.js"></script>
+
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
-    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" type="text/css" href="./styles/style.css">
 
 </head>
 <body>
@@ -22,11 +22,14 @@
   </div>
   <form action="" class="search-form">
     <input type="text" class="searchBar">
-    <input type="image" name="submit" src="docs/iconfinder_Search.png" alt="Submit" class="icon"/>
+    <input type="image" name="submit" src="./images/iconfinder_Search.png" alt="Submit" class="icon"/>
   </form>
+  <div id="div">
+    <table id="tableResult"></table>
+  </div>
 
-  <table id="tableResult">
-
-  </table>
+  <div id="favourites">
+    <h1>Favourites</h1>
+  </div>
 </body>
 </html>
