@@ -51,7 +51,6 @@ mongodb.MongoClient.connect(MONGODB_URI, function(err, client) {
                 console.log(err);
                 return res(err);
             } else {
-                console.log(docs);
                 return res.json(docs);
             }
         });
@@ -65,6 +64,6 @@ mongodb.MongoClient.connect(MONGODB_URI, function(err, client) {
 
   });
 
-app.listen(PORT, () => {
+app.listen(process.env.PORT || 8080, () => {
   console.log("Example app listening on port " + PORT);
 });
