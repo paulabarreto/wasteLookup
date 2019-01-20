@@ -44,6 +44,16 @@ mongodb.MongoClient.connect(MONGODB_URI, function(err, client) {
           })
   }
 
+  const removeFave = function(fave, cb) {
+    data.update(
+          {"_id": ObjectId(fave._id) },
+          { $set: { "favourite": false } },
+          function (err, result) {
+            if(err) throw err;
+            console.log(result);
+          })
+  }
+
 
   // app.get("/", (req, res) => {
   //   data.find({}).toArray(function (err, docs) {
@@ -85,6 +95,17 @@ mongodb.MongoClient.connect(MONGODB_URI, function(err, client) {
           });
       });
 
+      app.put("/unfavourites", function(req, res) {
+            const fave = req.body;
+            removeFave(fave, function(err, docs){
+                if (err) {
+                    console.log(err);
+                    return res(err);
+                } else {
+                    return res.json(docs);
+                }
+            });
+        });
 
 
 

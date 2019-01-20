@@ -22,6 +22,17 @@ function addFavourites(favourite){
   $('#favourites').append(favouriteList);
 }
 
+function removeFavourites(unfavourite){
+  $.ajax({
+    url: "/unfavourites",
+    type: "PUT",
+    data: unfavourite,
+    success: function(data) {
+      console.log(data)
+    }
+  });
+}
+
 function findKeyWord(searchResult){
   // let status = "unclicked";
   searchResult.forEach(function(element){
@@ -41,13 +52,20 @@ function findKeyWord(searchResult){
             </tr>
           `
       $('#tableResult').append(result);
-      $(`#${element._id}`).on("click", function(){
-        console.log(element);
-        $(`#${element._id}`).toggleClass('clicked');
-        addFavourites(element);
-      })
+
       if(element.favourite) {
         $(`#${element._id}`).toggleClass('clicked');
+        $(`#${element._id}`).on("click", function(){
+          console.log(element);
+          $(`#${element._id}`).removeClass('clicked');
+          removeFavourites(element);
+        });
+      } else {
+        $(`#${element._id}`).on("click", function(){
+          console.log(element);
+          $(`#${element._id}`).addClass('clicked');
+          addFavourites(element);
+        })
       }
   })
 }
