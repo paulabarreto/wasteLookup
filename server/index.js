@@ -6,10 +6,14 @@ require('dotenv').config();
 const PORT          = 8080;
 const express       = require("express");
 const bodyParser    = require("body-parser");
+var methodOverride = require("method-override");
 const app           = express();
 
 const mongodb = require('mongodb');
+const ObjectId = require('mongodb').ObjectID;
+
 const dataHelpers = require('./data-helpers.js');
+
 
 
 // Standard URI format: mongodb://[dbuser:dbpassword@]host:port/dbname
@@ -30,19 +34,31 @@ mongodb.MongoClient.connect(MONGODB_URI, function(err, client) {
     data.find({"keywords": {"$regex": waste}} ).toArray(cb);
   }
 
+  const postFave = function(fave, cb) {
+    data.update(
+          {"_id": ObjectId(fave._id) },
+          { $set: { "favourite": true } },
+          function (err, result) {
+            if(err) throw err;
+            console.log(result);
+          })
+  }
 
-  app.get("/", (req, res) => {
-    data.find({}).toArray(function (err, docs) {
 
-      if(err) throw err;
-
-      // Only close the connection when your app is terminating.
-      client.close(function (err) {
-        if(err) throw err;
-      });
-      res.send(docs);
-    });
-  });
+  // app.get("/", (req, res) => {
+  //   data.find({}).toArray(function (err, docs) {
+  //
+  //     if(err) throw err;
+  //
+  //     console.log(docs);
+  //
+  //     // Only close the connection when your app is terminating.
+  //     client.close(function (err) {
+  //       if(err) throw err;
+  //     });
+  //     res.send(docs);
+  //   });
+  // });
 
   app.post("/waste", function(req, res) {
         const search = req.body.search;
@@ -52,14 +68,24 @@ mongodb.MongoClient.connect(MONGODB_URI, function(err, client) {
                 return res(err);
             } else {
                 return res.json(docs);
+
             }
         });
     });
 
-  /*
-   * First we'll add a few songs. Nothing is required to create the
-   * songs collection; it is created automatically when we insert.
-   */
+    app.put("/favourites", function(req, res) {
+          const fave = req.body;
+          postFave(fave, function(err, docs){
+              if (err) {
+                  console.log(err);
+                  return res(err);
+              } else {
+                  return res.json(docs);
+              }
+          });
+      });
+
+
 
 
   });

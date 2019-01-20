@@ -7,7 +7,15 @@ function decodeHtml(html) {
 }
 
 function addFavourites(favourite){
-  favourites.push(favourite);
+  $.ajax({
+    url: "/favourites",
+    type: "PUT",
+    data: favourite,
+    success: function(data) {
+      console.log(data)
+    }
+  });
+
   let favouriteList = `
     <p>${favourite.title}</p>
   `
@@ -22,23 +30,25 @@ function findKeyWord(searchResult){
 
       let result =
         `
-            <tr id=${element.id}>
+            <tr>
               <th>
-                <span id="star${element.id}" class="${status}">
+                <span id=${element._id}>
                   <i class="fas fa-star"></i>
                 </span>
                 ${element.title}
-
               </th>
               <td>${description}</td>
             </tr>
           `
-
       $('#tableResult').append(result);
-      // $(`#${element.id}`).click(function(){
-      //   $(`#star${element.id}`).toggleClass('clicked');
-      //   addFavourites(element);
-      // })
+      $(`#${element._id}`).on("click", function(){
+        console.log(element);
+        $(`#${element._id}`).toggleClass('clicked');
+        addFavourites(element);
+      })
+      if(element.favourite) {
+        $(`#${element._id}`).toggleClass('clicked');
+      }
   })
 }
 
@@ -46,7 +56,6 @@ function displayResult(){
   $.ajax("/waste", { method: 'GET' })
     .then(function (result){
       console.log(result);
-      // renderTweets(tweets);
     });
 }
 
@@ -59,7 +68,6 @@ function loadData(){
   $(".search-form").on("submit", function(event){
     event.preventDefault();
     const search = $(".searchBar").serialize();
-    console.log(search);
     $.post("/waste", search, function(data){
         findKeyWord(data);
     });
