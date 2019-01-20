@@ -1,5 +1,8 @@
 "use strict";
 
+require('dotenv').config();
+
+
 const PORT          = 8080;
 const express       = require("express");
 const bodyParser    = require("body-parser");
@@ -11,9 +14,9 @@ const dataHelpers = require('./data-helpers.js');
 
 // Standard URI format: mongodb://[dbuser:dbpassword@]host:port/dbname
 
-let uri = 'mongodb://paulabarreto:emunah04@ds161794.mlab.com:61794/wastewizard';
+const MONGODB_URI = process.env.MONGODB_URI;
 
-mongodb.MongoClient.connect(uri, function(err, client) {
+mongodb.MongoClient.connect(MONGODB_URI, function(err, client) {
 
   if(err) throw err;
 
