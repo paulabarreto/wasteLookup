@@ -1,3 +1,5 @@
+const favourites = [];
+
 function decodeHtml(html) {
     var txt = document.createElement("textarea");
     txt.innerHTML = html;
@@ -5,40 +7,47 @@ function decodeHtml(html) {
 }
 
 function addFavourites(favourite){
+  favourites.push(favourite);
   let favouriteList = `
     <p>${favourite.title}</p>
   `
   $('#favourites').append(favouriteList);
 }
 
-function findKeyWord(array, search){
-  const favorites = [];
+function findKeyWord(searchResult){
+  // let status = "unclicked";
+  searchResult.forEach(function(element){
 
-  array.forEach(function(element){
-    if(element.keywords.includes(search)){
-      let description = decodeHtml(element.body)
+    let description = decodeHtml(element.body)
 
       let result =
         `
-          <tr id=${element.id}>
-            <th>
-              <span id="star${element.id}">
-                <i class="fas fa-star"></i>
-              </span>
-              ${element.title}
+            <tr id=${element.id}>
+              <th>
+                <span id="star${element.id}" class="${status}">
+                  <i class="fas fa-star"></i>
+                </span>
+                ${element.title}
 
-            </th>
-            <td>${description}</td>
-          </tr>
-        `
+              </th>
+              <td>${description}</td>
+            </tr>
+          `
 
-      $('#tableResult').append(result).data("favorite", false);
-      $(`#${element.id}`).click(function(){
-        $(`#star${element.id}`).toggleClass('clicked');;
-        addFavourites(element);
-      })
-    }
+      $('#tableResult').append(result);
+      // $(`#${element.id}`).click(function(){
+      //   $(`#star${element.id}`).toggleClass('clicked');
+      //   addFavourites(element);
+      // })
   })
+}
+
+function displayResult(){
+  $.ajax("/waste", { method: 'GET' })
+    .then(function (result){
+      console.log(result);
+      // renderTweets(tweets);
+    });
 }
 
 function changeEventHandler(event) {
@@ -47,36 +56,21 @@ function changeEventHandler(event) {
 }
 
 function loadData(){
-  $('.search-form').on("submit", function(event){
-    const search = $('.searchBar').val()
-    $.ajax({
-      url: "/waste",
-      type: "Get",
-      success: function(response){
-        console.log("front", response);
-        findKeyWord(response, search);
-      },
-      error: function(error){
-        console.log(`Error ${error}`)
-      }
-    })
+  $(".search-form").on("submit", function(event){
+    event.preventDefault();
+    const search = $(".searchBar").serialize();
+    console.log(search);
+    $.post("/waste", search, function(data){
+        findKeyWord(data);
+    });
 
     return false;
   })
 }
 
-function loadFaves(){
-    $.ajax("/faves", { method: 'GET' })
-    .then(function (faves){
-      console.log(faves);
-      // renderTweets(tweets);
-    });
-  }
-
 
 $(document).ready(function(){
   loadData();
-  loadFaves();
   document.querySelector('.searchBar').onchange=changeEventHandler;
 
 })
