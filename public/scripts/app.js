@@ -102,7 +102,10 @@ function findKeyWord(searchResult, faves){
       } else {
         $(`#${element._id}`).on("click", function(){
           $(`#${element._id}`).toggleClass('clicked');
+          element["favourite"] = true;
+          //Adds element to favorites bar
           addFavouriteToBar(element);
+          //Sends ajax request to add element as favourite in db
           addFavourites(element);
         })
       }
