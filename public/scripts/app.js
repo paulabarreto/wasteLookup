@@ -34,8 +34,8 @@ function addFavouriteToBar(favourite) {
     $(".favesTitle").html("Favourites");
     let elem = $('#favourites');
     let decodedDescription = decodeHtml(favourite.body)
-    let favouriteList = `
-        <table>
+    let favouriteList =
+    `
           <tr>
             <th>
               <span id=${favourite._id} class="clicked">
@@ -45,7 +45,6 @@ function addFavouriteToBar(favourite) {
             </th>
             <td>${decodedDescription}</td>
           </tr>
-        </table>
       `
       elem.append(favouriteList);
 }
