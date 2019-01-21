@@ -13,7 +13,6 @@ function addFavouritesBar(favourites) {
   favourites.forEach(function(favourite){
     let decodedDescription = decodeHtml(favourite.body)
     favouriteList.push(`
-        <table>
           <tr>
             <th>
               <span id=${favourite._id} class="clicked">
@@ -23,7 +22,6 @@ function addFavouritesBar(favourites) {
             </th>
             <td>${decodedDescription}</td>
           </tr>
-        </table>
       `);
   })
   elem.html(favouriteList);
@@ -35,16 +33,16 @@ function addFavouriteToBar(favourite) {
     let elem = $('#favourites');
     let decodedDescription = decodeHtml(favourite.body)
     let favouriteList =
-    `
-          <tr>
-            <th>
-              <span id=${favourite._id} class="clicked">
-                <i class="fas fa-star"></i>
-              </span>
-              ${favourite.title}
-            </th>
-            <td>${decodedDescription}</td>
-          </tr>
+      `
+        <tr>
+          <th>
+            <span id=${favourite._id} class="clicked">
+              <i class="fas fa-star"></i>
+            </span>
+            ${favourite.title}
+          </th>
+          <td>${decodedDescription}</td>
+        </tr>
       `
       elem.append(favouriteList);
 }
@@ -52,7 +50,7 @@ function addFavouriteToBar(favourite) {
 //Sends ajax request to update the database adding a false value to favourite
 function removeFavourites(unfavourite){
   $.ajax({
-    url: "/unfavourites",
+    url: "/waste/unfavourites",
     type: "PUT",
     data: unfavourite,
     success: function(data) {
@@ -64,7 +62,7 @@ function removeFavourites(unfavourite){
 //Sends ajax request to update the database adding a favourite key value pair
 function addFavourites(favourite){
   $.ajax({
-    url: "/favourites",
+    url: "/waste/favourites",
     type: "PUT",
     data: favourite,
     success: function(data) {
@@ -75,7 +73,8 @@ function addFavourites(favourite){
 
 //Displays the search result on the page
 function findKeyWord(searchResult, faves){
-  searchResult.forEach(function(element){
+    console.log(searchResult);
+    searchResult.forEach(function(element){
     let description = decodeHtml(element.body)
 
       let result =
