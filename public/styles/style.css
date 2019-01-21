@@ -12,6 +12,16 @@ body {
   background-image: linear-gradient(to right, #4682B4, #2E8B57);
 }
 
+table {
+  margin: 2em;
+  font-size: 0.8em;
+}
+
+th {
+  text-align: left;
+  width:30%;
+}
+
 .title {
   color: white;
   margin: 0;
@@ -37,4 +47,12 @@ body {
 
 .clicked {
   color: green;
+}
+
+.favesTitle {
+  color: green;
+}
+
+.favesDiv {
+  background-color: #F2F9F5;
 }

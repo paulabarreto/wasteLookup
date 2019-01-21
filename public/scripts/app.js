@@ -1,42 +1,82 @@
-const favourites = [];
-
+//Decodes HTML string
 function decodeHtml(html) {
     var txt = document.createElement("textarea");
     txt.innerHTML = html;
     return txt.value;
 }
 
-function addFavourites(favourite){
-  $.ajax({
-    url: "/favourites",
-    type: "PUT",
-    data: favourite,
-    success: function(data) {
-      console.log(data)
-    }
-  });
-
-  let favouriteList = `
-    <p>${favourite.title}</p>
-  `
-  $('#favourites').append(favouriteList);
+//Displays the Favourites Bar for an array of favourites
+function addFavouritesBar(favourites) {
+  let favouriteList = [];
+  $(".favesTitle").html("Favourites");
+  let elem = $('#favourites');
+  favourites.forEach(function(favourite){
+    let decodedDescription = decodeHtml(favourite.body)
+    favouriteList.push(`
+        <table>
+          <tr>
+            <th>
+              <span id=${favourite._id} class="clicked">
+                <i class="fas fa-star"></i>
+              </span>
+              ${favourite.title}
+            </th>
+            <td>${decodedDescription}</td>
+          </tr>
+        </table>
+      `);
+  })
+  elem.html(favouriteList);
 }
 
+//Displays the Favourites Bar for one favourite element
+function addFavouriteToBar(favourite) {
+    $(".favesTitle").html("Favourites");
+    let elem = $('#favourites');
+    let decodedDescription = decodeHtml(favourite.body)
+    let favouriteList = `
+        <table>
+          <tr>
+            <th>
+              <span id=${favourite._id} class="clicked">
+                <i class="fas fa-star"></i>
+              </span>
+              ${favourite.title}
+            </th>
+            <td>${decodedDescription}</td>
+          </tr>
+        </table>
+      `
+      elem.append(favouriteList);
+}
+
+//Sends ajax request to update the database adding a false value to favourite
 function removeFavourites(unfavourite){
   $.ajax({
     url: "/unfavourites",
     type: "PUT",
     data: unfavourite,
     success: function(data) {
-      console.log(data)
+      console.log("removed");
     }
   });
 }
 
-function findKeyWord(searchResult){
-  // let status = "unclicked";
-  searchResult.forEach(function(element){
+//Sends ajax request to update the database adding a favourite key value pair
+function addFavourites(favourite){
+  $.ajax({
+    url: "/favourites",
+    type: "PUT",
+    data: favourite,
+    success: function(data) {
+      console.log("added");
+    }
+  });
+}
 
+//Displays the search result on the page
+function findKeyWord(searchResult, faves){
+  searchResult.forEach(function(element){
     let description = decodeHtml(element.body)
 
       let result =
@@ -52,51 +92,50 @@ function findKeyWord(searchResult){
             </tr>
           `
       $('#tableResult').append(result);
-
       if(element.favourite) {
-        $(`#${element._id}`).toggleClass('clicked');
+        faves.push(element);
+        $(`#${element._id}`).addClass('clicked');
         $(`#${element._id}`).on("click", function(){
-          console.log(element);
-          $(`#${element._id}`).removeClass('clicked');
+          $(`#${element._id}`).toggleClass('clicked');
           removeFavourites(element);
+          const removedFave = faves.filter(word => word !== element );
+          addFavouritesBar(removedFave);
         });
       } else {
         $(`#${element._id}`).on("click", function(){
-          console.log(element);
-          $(`#${element._id}`).addClass('clicked');
+          $(`#${element._id}`).toggleClass('clicked');
+          addFavouriteToBar(element);
           addFavourites(element);
         })
       }
   })
+  if(faves.length > 1) {
+    addFavouritesBar(faves)
+  }
 }
 
-function displayResult(){
-  $.ajax("/waste", { method: 'GET' })
-    .then(function (result){
-      console.log(result);
-    });
-}
-
-function changeEventHandler(event) {
-    // You can use “this” to refer to the selected element.
-    if(!event.target.value) $('#div').empty();
-}
-
-function loadData(){
+//Gets the input value and sends it to the backend to make a query for keywords
+function loadData(faves){
   $(".search-form").on("submit", function(event){
     event.preventDefault();
     const search = $(".searchBar").serialize();
     $.post("/waste", search, function(data){
-        findKeyWord(data);
+        findKeyWord(data, faves);
     });
 
     return false;
   })
 }
 
+//Reloads the page if the search bar is emptied
+function changeEventHandler(event) {
+    if(!event.target.value) {
+      location.reload();
+    }
+}
 
 $(document).ready(function(){
-  loadData();
-  document.querySelector('.searchBar').onchange=changeEventHandler;
-
+  var faves = [];
+  loadData(faves);
+  document.querySelector('.searchBar').onkeyup=changeEventHandler;
 })

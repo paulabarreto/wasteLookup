@@ -14,10 +14,6 @@ const ObjectId = require('mongodb').ObjectID;
 
 const dataHelpers = require('./data-helpers.js');
 
-
-
-// Standard URI format: mongodb://[dbuser:dbpassword@]host:port/dbname
-
 const MONGODB_URI = process.env.MONGODB_URI;
 
 mongodb.MongoClient.connect(MONGODB_URI, function(err, client) {
@@ -40,7 +36,7 @@ mongodb.MongoClient.connect(MONGODB_URI, function(err, client) {
           { $set: { "favourite": true } },
           function (err, result) {
             if(err) throw err;
-            console.log(result);
+            console.log("added fave");
           })
   }
 
@@ -50,25 +46,25 @@ mongodb.MongoClient.connect(MONGODB_URI, function(err, client) {
           { $set: { "favourite": false } },
           function (err, result) {
             if(err) throw err;
-            console.log(result);
+            console.log("removed fave");
           })
   }
 
 
-  // app.get("/", (req, res) => {
-  //   data.find({}).toArray(function (err, docs) {
-  //
-  //     if(err) throw err;
-  //
-  //     console.log(docs);
-  //
-  //     // Only close the connection when your app is terminating.
-  //     client.close(function (err) {
-  //       if(err) throw err;
-  //     });
-  //     res.send(docs);
-  //   });
-  // });
+  app.get("/", (req, res) => {
+    data.find({}).toArray(function (err, docs) {
+
+      if(err) throw err;
+
+      console.log(docs);
+
+      // Only close the connection when your app is terminating.
+      client.close(function (err) {
+        if(err) throw err;
+      });
+      res.send(docs);
+    });
+  });
 
   app.post("/waste", function(req, res) {
         const search = req.body.search;
